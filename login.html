@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #764ba2;
+        }
+        .link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="login-form">
+            <label for="userId">User ID</label>
+            <input type="text" id="userId" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+
+            <p class="error" id="error-message">Invalid User ID or Password</p>
+
+            <button type="submit">Login</button>
+        </form>
+        <div class="link">
+            <a href="#" onclick="forgotPassword()">Forgot Password?</a>
+        </div>
+        <div class="link">
+            Don’t have an account? <a href="index.html">Register</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const userId = document.getElementById('userId').value;
+            const password = document.getElementById('password').value;
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            const user = users.find(user => user.userId === userId && user.password === password);
+
+            if (user) {
+                localStorage.setItem('loggedInUser', userId); // Store logged-in user for team page
+                window.location.href = `myteam.html?userId=${userId}`;
+            } else {
+                document.getElementById('error-message').style.display = 'block';
+            }
+        });
+
+        function forgotPassword() {
+            const userId = prompt('Enter your User ID to reset password:');
+            if (!userId) return;
+
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => user.userId === userId);
+
+            if (user) {
+                const newPassword = prompt('Enter your new password:');
+                if (newPassword) {
+                    user.password = newPassword;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    alert('Password updated successfully!');
+                }
+            } else {
+                alert('User ID not found.');
+            }
+        }
+    </script>
+</body>
+</html>
+
