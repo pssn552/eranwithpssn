@@ -1,0 +1,101 @@
+  
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Card</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 { font-size: 24px; margin-bottom: 20px; }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #statusMessage { font-size: 18px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Buy-Card</h1>
+        <form id="buyForm">
+            <label for="trx-id">Transaction ID (Trx ID)</label>
+            <input type="text" id="trx-id" required>
+
+            <label for="image-upload">Upload Proof of Payment</label>
+            <input type="file" id="image-upload" accept="image/*" required>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <p id="statusMessage"></p>
+    </div>
+
+    <script>
+        document.getElementById('buyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            let trxId = document.getElementById('trx-id').value;
+            let file = document.getElementById('image-upload').files[0];
+
+            if (trxId && file) {
+                localStorage.setItem('trxId', trxId);
+                localStorage.setItem('proofUploaded', 'true');
+                document.getElementById('statusMessage').innerText = "Your request is Processing.";
+
+                // Reset form after 2 seconds
+                setTimeout(() => {
+                    document.getElementById('buyForm').reset();
+                    document.getElementById('statusMessage').innerText = "";
+                }, 2000);
+            }
+        });
+
+        // Show approval message if admin has approved
+        window.onload = function() {
+            if (localStorage.getItem('approvalStatus') === 'approved') {
+                document.getElementById('statusMessage').innerHTML = 
+                    'Congratulations, your Heera Oil package has been approved. <br>' +
+                    '<button onclick="openHeeraPage()">Go to Heera Page</button>';
+            }
+        };
+
+        function openHeeraPage() {
+            window.location.href = 'heera.html';
+        }
+    </script>
+</body>
+</html>
