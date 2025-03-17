@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Purchase Management</title>
+</head>
+<body>
+
+    <h2>Manage Purchase Requests</h2>
+    
+    <table border="1" id="requestsTable">
+        <tr>
+            <th>User ID</th>
+            <th>Transaction ID</th>
+            <th>Proof Picture</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </table>
+
+    <script>
+        function loadRequests() {
+            let requests = JSON.parse(localStorage.getItem("purchaseRequests")) || [];
+            let table = document.getElementById("requestsTable");
+
+            table.innerHTML = `<tr>
+                <th>User ID</th>
+                <th>Transaction ID</th>
+                <th>Proof Picture</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>`;
+
+            requests.forEach((req, index) => {
+                let row = `<tr>
+                    <td>${req.userId}</td>
+                    <td>${req.trxId}</td>
+                    <td><img src="${req.proofPic}" alt="Proof" width="100"></td>
+                    <td>${req.status}</td>
+                    <td>
+                        <button onclick="approveRequest(${index})">Approve</button>
+                        <button onclick="rejectRequest(${index})">Reject</button>
+                    </td>
+                </tr>`;
+                table.innerHTML += row;
+            });
+        }
+
+        function approveRequest(index) {
+            let requests = JSON.parse(localStorage.getItem("purchaseRequests"));
+            requests[index].status = "approved";
+            localStorage.setItem("purchaseRequests", JSON.stringify(requests));
+            loadRequests();
+        }
+
+        function rejectRequest(index) {
+            let requests = JSON.parse(localStorage.getItem("purchaseRequests"));
+            requests[index].status = "rejected";
+            localStorage.setItem("purchaseRequests", JSON.stringify(requests));
+            loadRequests();
+        }
+
+        document.addEventListener("DOMContentLoaded", loadRequests);
+    </script>
+
+</body>
+</html>
