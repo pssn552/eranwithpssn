@@ -1,0 +1,81 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Balance Page</title>
+    <style>
+        body {
+            background-color: aqua;
+            text-align: center;
+            padding: 20px;
+        }
+        h2 {
+            font-size: 30px;
+            color: #666666;
+        }
+        p {
+            font-size: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: teal;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005f5f;
+        }
+        #pendingMessage {
+            color: red;
+            font-weight: bold;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 30px;
+            background-color: teal;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Balance</h2>
+    <p>Rs: <span id="balance">00.00</span></p>
+
+    <div id="withdrawalSection">
+        <form id="withdrawalForm">
+            <label for="accountNo">Account No:</label>
+            <input type="text" id="accountNo" required><br>
+
+            <label for="holderName">Account Title:</label>
+            <input type="text" id="holderName" required><br>
+
+            <button type="submit">Withdrawal Now</button>
+        </form>
+    </div>
+
+    <p id="pendingMessage" style="display: none;">Your withdrawal request is pending. Please wait for admin approval.</p>
+
+    <a href="home.html">Back</a>
+
+<script>
+window.onload = function() {
+    let balance = localStorage.getItem('balance') || '0.00';
+    document.getElementById('balance').innerText = balance;
+};
+</script>
+</body>
+</html>
+
