@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Withdrawal Requests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .request {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        .approve-btn {
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Withdrawal Requests</h1>
+    <div id="withdrawalRequests"></div>
+
+    <script>
+        const request = JSON.parse(localStorage.getItem('withdrawalRequest'));
+
+        if (request) {
+            document.getElementById('withdrawalRequests').innerHTML = `
+                <div class="request">
+                    <p><strong>Account No:</strong> ${request.accountNo}</p>
+                    <p><strong>Account Title:</strong> ${request.holderName}</p>
+                    <p><strong>Amount:</strong> Rs ${request.amount}</p>
+                    <p><strong>Status:</strong> <span id="status">${request.status}</span></p>
+                    <button class="approve-btn" onclick="approveRequest()">Approve</button>
+                </div>
+            `;
+        } else {
+            document.getElementById('withdrawalRequests').innerHTML = '<p>No withdrawal requests found.</p>';
+        }
+
+        function approveRequest() {
+            request.status = 'Approved';
+            localStorage.setItem('withdrawalRequest', JSON.stringify(request));
+            alert('Withdrawal approved! User can now make another request.');
+        }
+    </script>
+</body>
+</html>
