@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Purchase Management</title>
+    
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h2 {
+        color: #333;
+        margin-top: 20px;
+    }
+
+    table {
+        width: 50%;
+        max-width: 800px;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    td img {
+        border-radius: 5px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    button {
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    button:first-child {
+        background-color: #28a745;
+        color: white;
+    }
+
+    button:last-child {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    button:hover {
+        opacity: 0.8;
+    }
+</style>
+  
+    
+    
+    
+    
+    
+</head>
+<body>
+
+    <h2>Manage Purchase Requests</h2>
+    
+    <table border="1" id="requestsTable">
+        <tr>
+            <th>User ID</th>
+            <th>Transaction ID</th>
+            <th>Proof Picture</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </table>
+    
+<script>
+    function loadRequests() {
+        let requests = JSON.parse(localStorage.getItem("purchaseRequests")) || [];
+        let table = document.getElementById("requestsTable");
+
+        table.innerHTML = `<tr>
+            <th>User ID</th>
+            <th>Transaction ID</th>
+            <th>Proof Picture</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>`;
+
+        requests.forEach((req, index) => {
+            let row = `<tr>
+                <td>${req.userId}</td>
+                <td>${req.trxId}</td>
+                <td><img src="${req.proofPic}" alt="Proof" width="100"></td>
+                <td>${req.status}</td>
+                <td>
+                    <button onclick="approveRequest(${index})">Approve</button>
+                    <button onclick="rejectRequest(${index})">Reject</button>
+                </td>
+            </tr>`;
+            table.innerHTML += row;
+        });
+    }
+
+    function approveRequest(index) {
+        let requests = JSON.parse(localStorage.getItem("purchaseRequests"));
+        requests[index].status = "Approved";
+        localStorage.setItem("purchaseRequests", JSON.stringify(requests));
+        alert("Purchase request approved!");
+        loadRequests();
+    }
+
+    function rejectRequest(index) {
+        let requests = JSON.parse(localStorage.getItem("purchaseRequests"));
+        requests[index].status = "Rejected";
+        localStorage.setItem("purchaseRequests", JSON.stringify(requests));
+        alert("Purchase request rejected!");
+        loadRequests();
+    }
+
+    document.addEventListener("DOMContentLoaded", loadRequests);
+</script>
+
+
+    
+</body>
+</html>
