@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2>Manage Purchase Requests</h2>
+    <table id="requestsTable">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Transaction ID</th>
+                <th>Proof Picture</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="requestsTableBody"></tbody>
+    </table>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+table {
+    width: 70%;
+    max-width: 400px;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 7px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+td img {
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+button {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.approve-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.reject-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+</style>
+
+<script>
+
+function loadRequests() {
+    const requests = JSON.parse(localStorage.getItem("purchaseRequests")) || [];
+    const tableBody = document.getElementById("requestsTableBody");
+
+    tableBody.innerHTML = "";
+
+    requests.forEach((req, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${req.userId}</td>
+            <td>${req.trxId}</td>
+            <td><img src="${req.proofPic}" alt="Proof" width="100"></td>
+            <td>${req.status}</td>
+            <td>
+                ${req.status === "pending" ? `
+                    <button class="approve-btn" data-index="${index}">Approve</button>
+                    <button class="reject-btn" data-index="${index}">Reject</button>
+                ` : req.status}
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    // Add event listeners to approve and reject buttons
+    const approveButtons = document.querySelectorAll(".approve-btn");
+    const rejectButtons = document.querySelectorAll(".reject-btn");
+
+    approveButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const index = button.getAttribute("data-index");
+            approveRequest(index);
+        });
+    });
+
+    rejectButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const index = button.getAttribute("data-index");
+            rejectRequest(index);
+        });
+    });
+}
+
+function approveRequest(index) {
+    const requests = JSON.parse(localStorage.getItem("purchaseRequests"));
+    requests[index].status = "approved";
+    localStorage.setItem("purchaseRequests", JSON.stringify(requests));
+    alert("Purchase request approved!");
+    loadRequests();
+}
+
+function rejectRequest(index) {
+    const requests = JSON.parse(localStorage.getItem("purchaseRequests"));
+    requests[index].status = "rejected";
+    localStorage.setItem("purchaseRequests", JSON.stringify(requests));
+    alert("Purchase request rejected!");
+    loadRequests();
+}
+
+document.addEventListener("DOMContentLoaded", loadRequests);
+```
+    </script>
