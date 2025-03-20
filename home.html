@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Power Star</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General styles */
+        body {
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Navigation bar */
+        nav {
+            background: linear-gradient(45deg, #0077b6, #7b1fa2);
+            padding: 12px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: flex-end; /* Right side navigation */
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav li {
+            display: inline-block;
+        }
+
+        nav li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 12px 20px;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: all 0.3s ease-in-out;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        nav li a:hover {
+            background: rgba(255, 255, 255, 0.5);
+            color: #000;
+        }
+
+        /* Responsive Navigation */
+        @media (max-width: 600px) {
+            nav {
+                justify-content: center;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            nav li a {
+                width: 80%;
+                text-align: center;
+                font-size: 16px;
+                padding: 14px;
+            }
+        }
+
+        /* Banner section */
+        .banner {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .banner img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .banner p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        /* Social media section */
+        .social-icons {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .social-icons img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.2);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 14px;
+            color: #fff;
+            background: linear-gradient(45deg, #0077b6, #7b1fa2);
+        }
+    </style>
+</head>
+<body>
+    <a href="Admin.html"><img src="Power.jpg" width="100%" alt="Admin Panel"></a>
+
+    <!-- Navigation bar -->
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="act.html">Activity</a></li>
+            <li><a href="contact.html">About Us</a></li>
+            <li><a href="myteam.html">My Team</a></li>
+            <li><a href="balance.html">My Earnings</a></li>
+        </ul>
+    </nav>
+
+    <!-- Banner section -->
+    <div class="banner">
+        <img src="pssn.jpg" alt="Power Star Banner">
+        <p>Coming Soon / Buy Rs: 5000</p>
+        <p>Earn Monthly Rs: 25000 Total Rs: 300000</p>
+        <img src="Naz.jpg" alt="Power Star Banner">
+    </div>
+
+    <!-- Social Media Links -->
+    <div class="social-icons">
+        <a href="https://chat.whatsapp.com/IDmlCLVbNF17VHkB9FF8cZ" target="_blank">
+            <img src="Wattsap.png" alt="WhatsApp">
+        </a>
+        <a href="fb://profile/100064383054583" target="_blank">
+            <img src="facebook.png" alt="Facebook">
+        </a>
+        <a href="https://www.youtube.com/@Powerstar552" target="_blank">
+            <img src="youtube.png" alt="YouTube">
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 Power Star Sales Network. All rights reserved.
+    </footer>
+</body>
+</html>
