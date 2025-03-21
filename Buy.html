@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Pakg</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background: white;
+            width: 90%;
+            max-width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Purchase Request</h2>
+        <p>Send Rs:30 Enter transaction ID and upload screenshot</p>    
+        <p>Account No: 03413645244</p>    
+        <p>Account Title: Marium</p>    
+
+        <form id="purchaseForm">
+            <label for="trxId">Transaction ID:</label>
+            <input type="text" id="trxId" required placeholder="Enter transaction ID">
+            
+            <label for="proofPic">Upload Proof Picture:</label>
+            <input type="file" id="proofPic" accept="image/*" required>
+            
+            <button type="button" onclick="submitPurchase()">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function submitPurchase() {
+            let trxId = document.getElementById("trxId").value;
+            let proofPic = document.getElementById("proofPic").files[0];
+
+            if (!trxId || !proofPic) {
+                alert("Please enter transaction ID and upload proof picture.");
+                return;
+            }
+
+            // Save request in localStorage
+            localStorage.setItem("purchaseStatus", "pending");
+
+            // Redirect to admin's WhatsApp
+            let adminPhone = "03493984541"; 
+            let message = `Purchase Request:\nTransaction ID: ${trxId}\nPlease approve or reject the request.`;
+            let whatsappURL = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
+
+            window.location.href = whatsappURL;
+
+            alert("Purchase request sent to admin via WhatsApp. Wait for approval.");
+        }
+    </script>
+
+</body>
+</html>
