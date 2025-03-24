@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heera Oil - Daily Tasks</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      width: 90%; max-width: 400px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 25px; border-radius: 15px;
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+    h1 { font-size: 24px; font-weight: bold; color: #ff4081; }
+    h3 { font-size: 18px; color: #009688; font-weight: bold; margin-bottom: 15px; }
+    .task {
+      background: rgba(255, 255, 255, 0.5);
+      padding: 15px; margin: 15px 0;
+      border-radius: 10px; text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .progress-bar {
+      background: #f1f1f1; border-radius: 10px;
+      width: 100%; height: 10px; margin-top: 8px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #4caf50, #8bc34a);
+      transition: width 0.3s ease-in-out;
+      border-radius: 10px;
+    }
+    button {
+      background: linear-gradient(135deg, #ff9800, #ff5722);
+      color: white; border: none;
+      padding: 12px 18px; font-size: 14px;
+      border-radius: 30px; cursor: pointer;
+      margin-top: 10px; width: 100%;
+    }
+    button:hover { transform: scale(1.05); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="heera.jpeg" width="90%" height="120" style="border-radius: 10px;">
+    <h1>Heera Oil</h1>
+    <h3>Earn Rs:175</h3>
+    <p><strong>Your Referrer ID:</strong> <span id="referrerId">Loading...</span></p>
+
+    <div class="task" id="taskInvite">
+      <span class="task-title">Invite Friends</span><br />
+      <span>Progress: <span id="inviteProgress">0/3</span></span>
+      <div class="progress-bar"><div class="progress" id="inviteProgressBar"></div></div>
+      <button onclick="openReferralLink()">Invite Friends</button>
+    </div>
+
+    <div class="task" id="taskVideo">
+      <span class="task-title">Watch Video</span><br />
+      <span>Progress: <span id="videoProgress">0/1</span></span>
+      <div class="progress-bar"><div class="progress" id="videoProgressBar"></div></div>
+      <button onclick="watchVideo()">Watch Video</button>
+    </div>
+
+    <button type="button" id="submitButton">Submit</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // **LocalStorage کي ريفريش تي صاف ڪريو**
+        localStorage.removeItem("inviteCount");
+        localStorage.removeItem("videoWatched");
+        
+        // **Referral ID حاصل ڪريو**
+        function getReferralId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let refId = urlParams.get('referralId') || localStorage.getItem("referralId") || "No Referral ID Found";
+            localStorage.setItem("referralId", refId);
+            return refId;
+        }
+
+        document.getElementById("referrerId").textContent = getReferralId();
+
+        // **پروگريس ري سيٽ ڪريو**
+        document.getElementById("inviteProgress").textContent = "0/3";
+        document.getElementById("inviteProgressBar").style.width = "0%";
+        document.getElementById("videoProgress").textContent = "0/1";
+        document.getElementById("videoProgressBar").style.width = "0%";
+    });
+
+    function openReferralLink() {
+        let refId = localStorage.getItem("referralId");
+        if (!refId || refId === "No Referral ID Found") {
+            alert("Referral ID not found. Please log in first.");
+            return;
+        }
+        let referralLink = `https://pssn552.github.io/index.html?referralId=${refId}`;
+        navigator.clipboard.writeText(referralLink).then(() => {
+            alert("Referral link copied! Share on Facebook & WhatsApp.");
+        });
+
+        let currentCount = parseInt(document.getElementById("inviteProgress").textContent.split("/")[0]);
+        if (currentCount < 3) {
+            currentCount++;
+            document.getElementById("inviteProgress").textContent = `${currentCount}/3`;
+            document.getElementById("inviteProgressBar").style.width = `${(currentCount / 3) * 100}%`;
+        }
+        checkAllTasksCompleted();
+    }
+
+    function watchVideo() {
+        let videoURL = "https://youtu.be/3-XWB8Y7GAI?si=KSb-FnrzXjfIQj9r";
+        window.open(videoURL, "_blank");
+        setTimeout(() => {
+            document.getElementById("videoProgress").textContent = "1/1";
+            document.getElementById("videoProgressBar").style.width = "100%";
+            checkAllTasksCompleted();
+        }, 5000);
+    }
+
+    function checkAllTasksCompleted() {
+        let inviteCount = parseInt(document.getElementById("inviteProgress").textContent.split("/")[0]);
+        let videoCount = parseInt(document.getElementById("videoProgress").textContent.split("/")[0]);
+
+        if (inviteCount >= 3 && videoCount === 1) {
+            alert("All tasks completed! Your balance will be updated.");
+            let currentBalance = parseInt(localStorage.getItem("userBalance") || "0");
+            localStorage.setItem("userBalance", currentBalance + 175);
+            window.location.href = "balance.html";
+        }
+    }
+
+    document.getElementById("submitButton").addEventListener("click", checkAllTasksCompleted);
+  </script>
+</body>
+</html>
+
