@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal Requests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        h2 { color: #333; }
+        table {
+            width: 90%;
+            margin: auto;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        .pending { color: orange; }
+        .approved { color: green; }
+        .rejected { color: red; }
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+        .approve-btn { background: #28a745; }
+        .approve-btn:hover { background: #218838; }
+        .reject-btn { background: #dc3545; }
+        .reject-btn:hover { background: #c82333; }
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h2>Withdrawal Requests</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Amount (Rs.)</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="requestsTable">
+            <!-- Withdrawal requests will be inserted here -->
+        </tbody>
+    </table>
+
+    <a href="admin.html" class="back-btn">🔙 Back to Admin</a>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    let withdrawalRequests = JSON.parse(localStorage.getItem("withdrawalHistory")) || [];
+    let requestsTable = document.getElementById("requestsTable");
+    requestsTable.innerHTML = "";
+
+    withdrawalRequests.forEach((request, index) => {
+        if (request.status === "Pending") {
+            let row = `<tr id="row-${index}">
+                <td>${request.amount}</td>
+                <td>${request.date}</td>
+                <td class="pending">${request.status}</td>
+                <td>
+                    <button class="approve-btn" onclick="updateStatus(${index}, 'Approved')">Approve</button>
+                    <button class="reject-btn" onclick="updateStatus(${index}, 'Rejected')">Reject</button>
+                </td>
+            </tr>`;
+            requestsTable.innerHTML += row;
+        }
+    });
+});
+
+function updateStatus(index, status) {
+    let withdrawalRequests = JSON.parse(localStorage.getItem("withdrawalHistory")) || [];
+    
+    // Status اپڊيٽ ڪرڻ
+    withdrawalRequests[index].status = status;
+    
+    // ڊيٽا لوڪل اسٽوريج ۾ محفوظ ڪرڻ
+    localStorage.setItem("withdrawalHistory", JSON.stringify(withdrawalRequests));
+    
+    // لاگ ان يوزر جي لوڪل اسٽوريج مان pending status ختم ڪرڻ
+    localStorage.removeItem('withdrawalPending');
+
+    // خودڪار طور تي لسٽ مان درخواست کي هٽايو
+    document.getElementById(`row-${index}`).remove();
+    
+    alert(`Withdrawal request ${status}!`);
+}
+    </script>
+
+</body>
+</html>
+
