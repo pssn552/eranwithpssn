@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Tasks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px); padding: 25px; border-radius: 15px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25); text-align: center;
+        }
+        h1 { font-size: 24px; font-weight: bold; color: #ff4081; }
+        h3 { font-size: 18px; color: #009688; font-weight: bold; margin-bottom: 15px; }
+        .task {
+            background: rgba(255, 255, 255, 0.5); padding: 15px; margin: 15px 0;
+            border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .progress-bar {
+            background: #f1f1f1; border-radius: 10px; width: 100%; height: 10px;
+        }
+        .progress {
+            height: 100%; width: 0%; background: linear-gradient(90deg, #4caf50, #8bc34a);
+            transition: width 0.3s ease-in-out; border-radius: 10px;
+        }
+        button {
+            background: linear-gradient(135deg, #ff9800, #ff5722);
+            color: white; border: none; padding: 12px 18px;
+            font-size: 14px; border-radius: 30px; cursor: pointer;
+            margin-top: 10px; width: 100%;
+        }
+        button:hover { transform: scale(1.05); }
+        #notification {
+            position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8); color: white; padding: 10px 20px;
+            border-radius: 5px; display: none;
+        }
+        a { display: block; margin-top: 15px; text-decoration: none; font-size: 14px; color: #e91e63; }
+    </style>
+</head>
+<body>
+
+    <div id="notification"></div>
+    <img src="heera.jpeg" width="90%" height="120" style="border-radius: 10px;">
+    <div class="container">
+        <h1>Heera Oil</h1>
+        <h3>Earn Rs:175</h3>
+
+        <p><strong>Your Referrer ID:</strong> <span id="referrerId">Loading...</span></p>
+
+        <!-- Task 1: Invite Friends -->
+        <div class="task" id="task1">
+            <div class="task-info">
+                <span class="task-title">Invite Friends</span>
+                <span>Progress: <span id="inviteProgress">0/3</span></span>
+                <div class="progress-bar">
+                    <div class="progress" id="inviteProgressBar"></div>
+                </div>
+            </div>
+            <button onclick="openReferralLink()">Invite Friends</button>
+        </div>
+
+        <!-- Task 2: Watch Video -->
+        <div class="task" id="task2">
+            <div class="task-info">
+                <span class="task-title">Watch Video</span>
+                <span>Progress: <span id="videoProgress">0/1</span></span>
+                <div class="progress-bar">
+                    <div class="progress" id="videoProgressBar"></div>
+                </div>
+            </div>
+            <button onclick="watchVideo()">Watch Video</button>
+        </div>
+    </div>
+
+    <button type="button" id="submitButton" disabled>Submit</button>
+    <a href="home.html">Back</a>
+
+    <script>
+        // Function to get referral ID from URL
+        function getReferralId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('referralId');
+        }
+
+        // Display referral ID
+        document.addEventListener("DOMContentLoaded", function () {
+            const referrerId = getReferralId();
+            document.getElementById("referrerId").textContent = referrerId ? referrerId : "No Referral ID Found";
+        });
+
+        function showNotification(message) {
+            let notification = document.getElementById("notification");
+            notification.innerHTML = message;
+            notification.style.display = "block";
+            setTimeout(() => { notification.style.display = "none"; }, 3000);
+        }
+
+        function openReferralLink() {
+            let referrerId = getReferralId();
+            if (!referrerId) {
+                showNotification("Referral ID not found. Please log in first.");
+                return;
+            }
+
+            let referralLink = `https://pssn552.github.io/index.html?referralId=${referrerId}`;
+            navigator.clipboard.writeText(referralLink).then(() => {
+                showNotification("Referral link copied! Share it on Facebook & WhatsApp.");
+            });
+
+            updateInviteProgress();
+        }
+
+        function updateInviteProgress() {
+            let inviteProgress = document.getElementById("inviteProgress");
+            let inviteProgressBar = document.getElementById("inviteProgressBar");
+            let currentCount = parseInt(inviteProgress.textContent.split("/")[0]) + 1;
+
+            if (currentCount <= 3) {
+                inviteProgress.textContent = `${currentCount}/3`;
+                inviteProgressBar.style.width = `${(currentCount / 3) * 100}%`;
+            }
+
+            checkAllTasksCompleted();
+        }
+
+        function watchVideo() {
+            let videoURL = "https://youtu.be/3-XWB8Y7GAI?si=KSb-FnrzXjfIQj9r";
+            window.open(videoURL, "_blank");
+
+            setTimeout(() => {
+                document.getElementById("videoProgress").textContent = "1/1";
+                document.getElementById("videoProgressBar").style.width = "100%";
+                checkAllTasksCompleted();
+            }, 3000);
+        }
+
+        function checkAllTasksCompleted() {
+            let inviteCount = parseInt(document.getElementById("inviteProgress").textContent.split("/")[0]);
+            let videoCount = parseInt(document.getElementById("videoProgress").textContent.split("/")[0]);
+
+            if (inviteCount >= 3 && videoCount === 1) {
+                showNotification("All tasks completed! You can submit now.");
+                document.getElementById("submitButton").disabled = false;
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
+
