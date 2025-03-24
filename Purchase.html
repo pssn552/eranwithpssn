@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Purchase Requests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 5px;
+            border-radius: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .reject-btn { background: #dc3545; }
+        .reject-btn:hover { background: #c82333; }
+        .proof-img { width: 100%; max-width: 250px; margin: 10px 0; border-radius: 5px; }
+        .no-requests { color: red; font-weight: bold; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Admin Panel - Purchase Requests</h2>
+        <p>Approve or Reject Purchase Requests</p>
+
+        <div id="requestsList"></div>
+    </div>
+
+<script>
+    function loadRequests() {
+        let requests = JSON.parse(localStorage.getItem("purchaseRequests")) || [];
+        let listContainer = document.getElementById("requestsList");
+
+        if (requests.length === 0) {
+            listContainer.innerHTML = `<p class="no-requests">No Pending Requests</p>`;
+            return;
+        }
+
+        listContainer.innerHTML = requests.map((request, index) => `
+            <div class="request-item">
+                <p><strong>Page:</strong> ${request.page}</p>
+                <p><strong>Transaction ID:</strong> ${request.trxId}</p>
+                <img src="${request.proofPic}" alt="Proof Image" class="proof-img">
+                <button onclick="approveRequest(${index})">Approve</button>
+                <button class="reject-btn" onclick="rejectRequest(${index})">Reject</button>
+                <hr>
+            </div>
+        `).join("");
+    }
+
+    function approveRequest(index) {
+        let requests = JSON.parse(localStorage.getItem("purchaseRequests"));
+        let approvedPage = requests[index].page;
+
+        // ✅ ايڊمن جي منظور ٿيل درخواست لوڪل اسٽوريج ۾ محفوظ ڪئي وئي
+        localStorage.setItem("approvedPage", approvedPage);
+
+        alert(`Request for ${approvedPage} Approved! Redirecting user...`);
+
+        // ✅ درخواست کي حذف ڪريو
+        requests.splice(index, 1);
+        localStorage.setItem("purchaseRequests", JSON.stringify(requests));
+
+        // ✅ UI کي اپڊيٽ ڪريو
+        loadRequests();
+    }
+
+    function rejectRequest(index) {
+        let requests = JSON.parse(localStorage.getItem("purchaseRequests"));
+
+        // ✅ درخواست کي لوڪل اسٽوريج مان ختم ڪريو
+        requests.splice(index, 1);
+        localStorage.setItem("purchaseRequests", JSON.stringify(requests));
+
+        alert("Request Rejected!");
+
+        // ✅ UI کي اپڊيٽ ڪريو
+        loadRequests();
+    }
+
+    document.addEventListener("DOMContentLoaded", loadRequests);
+</script>
+
+</body>
+</html>
