@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #FFB6C1, #87CEEB);
+            color: #333;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        h1 {
+            color: #FF4500;
+            font-size: 26px;
+        }
+        .referral-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #FFE4B5;
+            border: 1px solid #FFD700;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        #referral-link {
+            word-break: break-all;
+            flex: 1;
+            text-align: left;
+            color: #008080;
+            font-weight: bold;
+        }
+        .copy-btn {
+            background: #32CD32;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .copy-btn:hover {
+            background: #228B22;
+        }
+        .social-buttons {
+            display: none;
+            margin-top: 10px;
+        }
+        .social-buttons a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .facebook { background: #1877F2; }
+        .whatsapp { background: #25D366; }
+        .message { background: #FF4500; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Team</h1>
+        
+        <h2>Your Referral Link:</h2>
+        <div class="referral-section">
+            <span id="referral-link">Loading...</span>
+            <button class="copy-btn" onclick="copyReferralLink()">Copy</button>
+        </div>
+
+        <!-- Social Share Buttons -->
+        <div class="social-buttons" id="socialButtons">
+            <a id="fbShare" href="#" target="_blank" class="facebook">📘 Facebook</a>
+            <a id="whatsappShare" href="#" target="_blank" class="whatsapp">💬 WhatsApp</a>
+            <a id="messageShare" href="#" target="_blank" class="message">📩 Message</a>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                let userId = urlParams.get('userId') || localStorage.getItem('loggedInUser');
+
+                if (!userId) {
+                    alert("No user found! Please login again.");
+                    window.location.href = "index.html";
+                    return;
+                }
+
+                // ✅ Generate correct referral link
+                let baseUrl = window.location.origin + window.location.pathname.replace("myteam.html", "index.html");
+                let referralLink = `${baseUrl}?referralId=${userId}`;
+                
+                document.getElementById('referral-link').textContent = referralLink;
+
+                // ✅ Prepare share buttons
+                showShareButtons(referralLink);
+            });
+
+            function copyReferralLink() {
+                let referralText = document.getElementById('referral-link').textContent;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(referralText).then(() => {
+                        alert("✅ Referral link copied!");
+                        showShareButtons(referralText);
+                    }).catch(err => {
+                        fallbackCopyText(referralText);
+                    });
+                } else {
+                    fallbackCopyText(referralText);
+                }
+            }
+
+            function fallbackCopyText(text) {
+                let tempInput = document.createElement("input");
+                tempInput.value = text;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+                alert("✅ Referral link copied!");
+                showShareButtons(text);
+            }
+
+            function showShareButtons(referralLink) {
+                document.getElementById('socialButtons').style.display = "block";
+
+                let encodedLink = encodeURIComponent(referralLink);
+                document.getElementById('fbShare').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedLink}`;
+                document.getElementById('whatsappShare').href = `https://wa.me/?text=${encodeURIComponent("Join my team on Power Star Sales Network and earn! " + referralLink)}`;
+                document.getElementById('messageShare').href = `sms:?body=${encodeURIComponent("Join my team on Power Star Sales Network and earn! " + referralLink)}`;
+            }
+        </script>
+    </div>
+</body>
+</html>
+
