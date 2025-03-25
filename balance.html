@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Balance Page</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .balance-box {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            width: 200px;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            width: 280px;
+            margin: 15px auto;
+        }
+
+        label {
+            display: block;
+            margin: 8px 0 4px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 95%;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #ff5733;
+            color: white;
+        }
+
+        button:hover {
+            background: #c70039;
+        }
+
+        #pendingMessage {
+            color: yellow;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .history-container {
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        table {
+            width: 100%;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        th, td {
+            padding: 6px;
+            border-bottom: 1px solid white;
+            text-align: center;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .pending {
+            color: orange;
+        }
+
+        .approved {
+            color: lime;
+        }
+
+        .rejected {
+            color: red;
+        }
+
+        /* Mobile View */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 18px;
+            }
+            .balance-box {
+                font-size: 18px;
+                width: 180px;
+            }
+            form {
+                width: 250px;
+                padding: 10px;
+            }
+            input, button {
+                font-size: 12px;
+                padding: 6px;
+            }
+            table {
+                font-size: 10px;
+            }
+            th, td {
+                padding: 5px;
+            }
+        }
+
+        /* Radio Buttons Center */
+        .radio-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Account Balance</h1>
+
+    <form>
+        <label>Select Withdrawal Method:</label>
+        <div class="radio-container">
+            <input type="radio" id="easypaisa" name="withdrawalMethod" value="EasyPaisa">
+            <label for="easypaisa">EasyPaisa</label>
+
+            <input type="radio" id="jazzcash" name="withdrawalMethod" value="JazzCash">
+            <label for="jazzcash">JazzCash</label>
+        </div>
+    </form>
+
+    <div class="balance-box">
+        Rs. <span id="balanceAmount">0</span>
+    </div>
+
+    <div id="withdrawalSection">
+        <form id="withdrawal">
+            <label for="accountNo">Account No:</label>
+            <input type="text" id="accountNo" required><br>
+
+            <label for="holderName">Account Title:</label>
+            <input type="text" id="holderName" required><br>
+
+            <label for="withdrawAmount">Withdraw Amount:</label>
+            <input type="number" id="withdrawAmount" min="100" required><br>
+
+            <button type="submit">Withdraw Now</button>
+        </form>
+    </div>
+
+    <p id="pendingMessage">Your withdrawal request is pending. Please wait for admin approval.</p>
+
+    <div class="history-container">
+        <h2>Withdrawal History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Amount (Rs.)</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+        </table>
+    </div>
+
+<script>
+    
+document.getElementById("withdrawal").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    let withdrawAmount = parseInt(document.getElementById("withdrawAmount").value);
+    let accountTitle = document.getElementById("holderName").value;
+    let selectedMethod = document.querySelector('input[name="withdrawalMethod"]:checked');
+
+    if (!selectedMethod) {
+        alert("Please select a withdrawal method (EasyPaisa or JazzCash).");
+        return;
+    }
+
+    if (withdrawAmount < 100) {
+        alert("The minimum withdrawal amount is Rs. 100.");
+        return;
+    }
+
+    if (withdrawAmount > balance) {
+        alert("Insufficient balance!");
+        return;
+    }
+
+    updateBalance(balance - withdrawAmount);
+    addWithdrawalHistory(withdrawAmount, "Pending", accountTitle);
+
+    // Hide radio button section
+    document.querySelector(".radio-container").style.display = "none";
+
+    // Update form and message
+    document.getElementById("pendingMessage").style.display = "block";
+    document.getElementById("withdrawalSection").style.display = "none";
+
+    alert("Your withdrawal request has been submitted successfully. Please wait for admin approval.");
+});
+
+    
+    
+document.addEventListener("DOMContentLoaded", function () {
+    let balance = localStorage.getItem("balance") ? parseInt(localStorage.getItem("balance")) : 5000;
+    let withdrawalHistory = JSON.parse(localStorage.getItem("withdrawalHistory")) || [];
+
+    document.getElementById("balanceAmount").innerText = balance;
+
+    function updateBalance(newBalance) {
+        balance = newBalance;
+        localStorage.setItem("balance", balance);
+        document.getElementById("balanceAmount").innerText = balance;
+    }
+
+    function addWithdrawalHistory(amount, status, accountTitle) {
+        let history = { amount, date: new Date().toLocaleString(), status, accountTitle };
+        withdrawalHistory.push(history);
+        localStorage.setItem("withdrawalHistory", JSON.stringify(withdrawalHistory));
+        showHistory();
+    }
+
+    function showHistory() {
+        let historyTable = document.getElementById("historyTable");
+        historyTable.innerHTML = "";
+        withdrawalHistory.forEach(entry => {
+            let row = `<tr>
+                <td>Rs. ${entry.amount}</td>
+                <td>${entry.date}</td>
+                <td class="${entry.status.toLowerCase()}">${entry.status}</td>
+            </tr>`;
+            historyTable.innerHTML += row;
+        });
+    }
+
+    document.getElementById("withdrawal").addEventListener("submit", function (event) {
+        event.preventDefault();
+        let withdrawAmount = parseInt(document.getElementById("withdrawAmount").value);
+        let accountTitle = document.getElementById("holderName").value;
+
+        if (withdrawAmount < 100) {
+            alert("The minimum withdrawal amount is Rs. 100.");
+            return;
+        }
+
+        if (withdrawAmount > balance) {
+            alert("Insufficient balance!");
+            return;
+        }
+
+        updateBalance(balance - withdrawAmount);
+        addWithdrawalHistory(withdrawAmount, "Pending", accountTitle);
+
+        document.getElementById("pendingMessage").style.display = "block";
+        document.getElementById("withdrawalSection").style.display = "none";
+
+        alert("Your withdrawal request has been submitted successfully. Please wait for admin approval. Processing may take up to 48 hours.");
+    });
+
+    showHistory();
+});
+    
+    
+    
+</script>
+
+</body>
+</html>
+ 
