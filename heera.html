@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heera Oil - Daily Tasks</title>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #ff758c; text-align: center; padding: 20px; }
+    .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+    button { background: #ff5722; color: white; padding: 10px; border: none; cursor: pointer; width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Heera Oil - Daily Tasks</h1>
+    <p>Invite 3 friends and watch a video to earn Rs:175</p>
+    
+    <div><button onclick="openReferralLink()">Invite Friends</button></div>
+    <div><button onclick="watchVideo()">Watch Video</button></div>
+
+    <button id="submitButton">Submit</button>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (localStorage.getItem("taskCompleted") === "true") {
+        alert("You have already completed this task.");
+        window.location.href = "act.html";
+    }
+});
+
+function watchVideo() {
+    alert("Watch video completed!");
+    localStorage.setItem("videoWatched", "1");
+}
+
+function openReferralLink() {
+    alert("Referral link opened!");
+    localStorage.setItem("inviteCount", "3");
+}
+
+document.getElementById("submitButton").addEventListener("click", function() {
+    if (localStorage.getItem("inviteCount") >= "3" && localStorage.getItem("videoWatched") === "1") {
+        alert("All tasks completed! Rs. 175 has been added to your balance.");
+        localStorage.setItem("taskCompleted", "true");
+        window.location.href = "balance.html";
+    } else {
+        alert("Please complete all tasks before submitting.");
+    }
+});
+</script>
+
+</body>
+</html>
