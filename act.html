@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity</title>
+    <style>
+        /* General Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            text-align: center;
+            padding: 10px;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Product Card */
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 320px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Image Styling */
+        .card img {
+            width: 100%;
+            max-width: 180px;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+            margin: 10px 0;
+        }
+
+        /* Labels */
+        label {
+            display: inline-block;
+            background: linear-gradient(135deg, #32CD32, #008000);
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 4px 10px rgba(50, 205, 50, 0.4);
+        }
+
+        /* Buy Button */
+        .buy-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6347, #FF4500);
+            color: white;
+            text-decoration: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 4px 10px rgba(255, 99, 71, 0.4);
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 6px 20px rgba(255, 69, 0, 0.6);
+        }
+
+        /* Coming Soon Section */
+        .coming-soon {
+            margin-top: 30px;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .card {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <label>Eran: 175</label>
+        <img src="heera.jpeg">
+        <a href="heerab.html" class="buy-btn" id="buyRs30">Buy Rs: 30</a>  
+    </div>
+
+    <div class="card">
+        <label>Eran: 500</label>
+        <img src="topi.jpeg">
+        <a href="capb.html" class="buy-btn">Buy Rs: 100</a>  
+    </div>
+
+    <div class="card">
+        <label>Eran: 750</label>
+        <img src="seeds.jpeg">
+        <a href="seedb.html" class="buy-btn">Buy Rs: 150</a>
+    </div>
+
+    <div class="card">
+        <label>Eran: 1000</label>
+        <img src="honey.jpeg">
+        <a href="honeyb.html" class="buy-btn">Buy Rs: 200</a>
+    </div>
+
+    <div class="card">
+        <label>Eran: 5000</label>
+        <img src="Clt.jpg">
+        <a href="cltb.html" class="buy-btn">Buy Rs: 500</a>
+    </div>
+
+    <div class="card">
+        <label>Eran: 10000</label>
+        <img src="sweet.jpg">
+        <a href="sweetsb.html" class="buy-btn">Buy Rs: 1000</a>
+    </div>
+</div>
+
+<!-- Coming Soon Section -->
+<div class="coming-soon">
+    <p>Coming Soon</p>
+    <p>Eran: 25000 Monthly</p>
+    <p>Total Earning: 300000</p>
+    <img src="Naz.jpg" width="100%" height="130">
+    <br>
+    <a href="naz.html" class="buy-btn">Buy Rs: 5000</a>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    if (localStorage.getItem("taskCompleted") === "true") {
+        document.getElementById("buyRs30").textContent = "Completed";
+        document.getElementById("buyRs30").style.background = "gray";
+        document.getElementById("buyRs30").removeAttribute("href");
+    }
+});
+</script>
+
+</body>
+</html>
