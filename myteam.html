@@ -1,0 +1,197 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Team</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 95%;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #ff5722;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        #referral-link {
+            font-weight: bold;
+            color: #2e8b57;
+            text-align: center;
+            word-break: break-word;
+            padding: 10px;
+            background: #e7fbe9;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .share-buttons {
+            text-align: center;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .share-buttons a {
+            text-decoration: none;
+            font-size: 14px;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            width: auto;
+        }
+
+        .share-buttons a.whatsapp {
+            background-color: #25D366;
+        }
+
+        .share-buttons a.facebook {
+            background-color: #1877f2;
+        }
+
+        .share-buttons a:hover,
+        .share-buttons a:focus {
+            opacity: 0.9;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .home-btn {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .home-btn a {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-btn a:hover {
+            background-color: #0056b3;
+        }
+
+        #teamList {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 20px;
+        }
+
+        #teamList li {
+            background-color: #f1f1f1;
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 15px;
+            color: #333;
+        }
+
+        #teamList h2 {
+            color: #ff5722;
+        }
+
+        @media (min-width: 600px) {
+            .share-buttons {
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            .share-buttons a {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Invite Your Friends</h2>
+        <p>Your Referral Link:</p>
+        <p id="referral-link"></p>
+
+        <div class="share-buttons" id="share-buttons-container"></div>
+
+        <!-- ✅ Team Members Section -->
+        <div class="container">
+            <h2>My Team Members:</h2>
+            <ul id="teamList"></ul>
+        </div>
+
+        <!-- ✅ Go to Home Button -->
+        <div class="home-btn">
+            <a href="home.html">Go to Home</a>
+        </div>
+    </div>
+
+    <script>
+        function showShareButtons(referralLink) {
+            const encodedLink = encodeURIComponent(referralLink);
+            const whatsappURL = `https://wa.me/?text=Join%20using%20my%20referral%20link:%20${encodedLink}`;
+            const facebookURL = `https://www.facebook.com/sharer/sharer.php?u=${encodedLink}`;
+
+            const shareContainer = document.getElementById('share-buttons-container');
+            shareContainer.innerHTML = `
+                <a class="whatsapp" href="${whatsappURL}" target="_blank">Share on WhatsApp</a>
+                <a class="facebook" href="${facebookURL}" target="_blank">Share on Facebook</a>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let referralId = urlParams.get('userId') || urlParams.get('referralId') || localStorage.getItem('loggedInUser');
+
+            if (!referralId) {
+                alert("No referral ID found! Please login again.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            let baseUrl = window.location.origin + window.location.pathname.replace("myteam.html", "index.html");
+            let referralLink = `${baseUrl}?referralId=${referralId}`;
+            
+            document.getElementById('referral-link').textContent = referralLink;
+            showShareButtons(referralLink);
+
+            // ✅ Show Team Members
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const teamList = document.getElementById('teamList');
+
+            const teamMembers = users.filter(user => user.referrer === referralId);
+            if (teamMembers.length === 0) {
+                teamList.innerHTML = "<li>No team members yet.</li>";
+            } else {
+                teamMembers.forEach(member => {
+                    const li = document.createElement('li');
+                    li.textContent = `${member.name} (${member.userId})`;
+                    teamList.appendChild(li);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
