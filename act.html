@@ -1,0 +1,113 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Activity Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    .task-box {
+      background: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .task-box h3 {
+      margin: 0 0 10px;
+    }
+    .task-box button {
+      padding: 10px 20px;
+      background-color: #667eea;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .task-box button:disabled {
+      background-color: #aaa;
+    }
+    .status {
+      margin-top: 10px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Today's Tasks</h1>
+
+  <div class="task-box">
+    <h3>1. Heera Oil Task</h3>
+    <p>Complete the Heera Oil sharing and invite 3 users.</p>
+    <button onclick="goToHeera()">Go to Task</button>
+    <div class="status" id="heeraStatus"></div>
+  </div>
+
+  <div class="task-box">
+    <h3>2. Submit Task</h3>
+    <p>Once all tasks are complete, submit and earn Rs. 175.</p>
+    <button id="submitBtn" onclick="submitTask()">Submit</button>
+    <div class="status" id="submitStatus"></div>
+  </div>
+
+  <script>
+    const currentUserId = localStorage.getItem('currentUserId');
+    if (!currentUserId) {
+      alert('Please login first.');
+      window.location.href = 'index.html';
+    }
+
+    // Keys per user
+    const heeraKey = `heeraTaskStatus_${currentUserId}`;
+    const submitKey = `submitStatus_${currentUserId}`;
+    const balanceKey = `balance_${currentUserId}`;
+
+    // Show task status on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const heeraStatus = localStorage.getItem(heeraKey);
+      const submitStatus = localStorage.getItem(submitKey);
+
+      if (heeraStatus === 'completed') {
+        document.getElementById('heeraStatus').textContent = 'Task completed!';
+      }
+
+      if (submitStatus === 'done') {
+        document.getElementById('submitStatus').textContent = 'Already submitted!';
+        document.getElementById('submitBtn').disabled = true;
+      }
+    });
+
+    function goToHeera() {
+      window.location.href = 'heera.html';
+    }
+
+    function submitTask() {
+      const heeraStatus = localStorage.getItem(heeraKey);
+      if (heeraStatus === 'completed') {
+        localStorage.setItem(submitKey, 'done');
+        document.getElementById('submitStatus').textContent = 'Submitted successfully! Rs. 175 added.';
+
+        // Update balance
+        let balance = parseInt(localStorage.getItem(balanceKey)) || 0;
+        balance += 175;
+        localStorage.setItem(balanceKey, balance.toString());
+
+        // Disable submit
+        document.getElementById('submitBtn').disabled = true;
+      } else {
+        alert('Please complete Heera Oil task first.');
+      }
+    }
+  </script>
+
+</body>
+</html>
+
+
