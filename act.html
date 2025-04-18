@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Activity & Buy Heera</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      max-width: 320px;
+      margin: 20px auto;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .buy-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #FF6347, #FF4500);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      text-decoration: none;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .container {
+      background: white;
+      color: black;
+      width: 90%;
+      max-width: 320px;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: none;
+    }
+    label, button, input {
+      display: block;
+      margin: 10px auto;
+      width: 90%;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Activity Card -->
+  <div class="card">
+    <label>Eran: 175</label>
+    <img src="heera.jpeg" alt="Heera Package">
+    <div class="buy-btn" onclick="handleRedirect()">Buy Rs: 30</div>
+  </div>
+
+  <!-- Heera Buy Form -->
+  <div id="heeraForm" class="container">
+    <h2>Buy Heera Package</h2>
+    <label>Send Rs:30 to EasyPaisa: 03413645244</label>
+    <form id="purchaseForm">
+      <input type="text" id="trxId" placeholder="Transaction ID" required>
+      <input type="file" id="proofPic" accept="image/*" required>
+      <button type="button" onclick="submitPurchase()">Submit</button>
+    </form>
+    <div id="statusMessage"></div>
+  </div>
+
+  <script>
+    function handleRedirect() {
+      const hasPurchased = localStorage.getItem("hasPurchased");
+      const taskCompleted = localStorage.getItem("heeraTaskComplete");
+
+      if (hasPurchased === "true" && taskCompleted !== "true") {
+        window.location.href = "heera.html";
+      } else {
+        document.getElementById("heeraForm").style.display = "block";
+        window.scrollTo({ top: document.getElementById("heeraForm").offsetTop, behavior: 'smooth' });
+      }
+    }
+
+    function submitPurchase() {
+      const trxId = document.getElementById("trxId").value;
+      const proofPic = document.getElementById("proofPic").files[0];
+      if (!trxId || !proofPic) {
+        alert("Please enter transaction ID and upload proof.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const proofURL = e.target.result;
+        const requests = JSON.parse(localStorage.getItem("purchaseRequests")) || [];
+        requests.push({ trxId, proofPic: proofURL, status: "Pending" });
+        localStorage.setItem("purchaseRequests", JSON.stringify(requests));
+        localStorage.setItem("hasPurchased", "true");
+
+        document.getElementById("purchaseForm").style.display = "none";
+        document.getElementById("statusMessage").innerText = "Request submitted. Please wait for admin approval.";
+      };
+      reader.readAsDataURL(proofPic);
+    }
+
+    function checkApproval() {
+      const approved = localStorage.getItem("approvedPage");
+      if (approved === "heera.html") {
+        localStorage.removeItem("approvedPage");
+        window.location.href = "heera.html";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", checkApproval);
+  </script>
+</body>
+</html>
+
